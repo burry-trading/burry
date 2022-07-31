@@ -1,33 +1,21 @@
 <template>
-  <div class="container">
-    <div class="row" v-if="error.status">
-      <div class="col-sm-12">
-        <div class="alert alert-danger" role="alert">
-          {{ error.message }}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <h1 class="text-center">Bem-vindo ao burry! 🎉</h1>
+            <p class="text-center">Percebemos que você ainda não tem <a href="/settings">Binance</a> configurado em nosso sistema para iniciar as operações automizadas com nosso bot.</p>
+
+            <p class="text-center text-muted">Assim que você nós enviar os dados da sua API da Binance, vamos conseguir carregar nosso dashboard completo. 😉</p>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label for="inputEmail" class="form-label">Email</label>
-          <input type="email" class="form-control" v-model="auth.email">
-        </div>
-        <div class="mb-3">
-          <label for="inputPassword" class="form-label">Senha</label>
-          <input type="password" class="form-control" v-model="auth.password">
-        </div>
-        <button id="btnLogin" class="btn btn-primary" v-on:click="authenticate">Enviar</button>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import fetch from './../../services/burry.service';
 
 export default {
-  name: 'LoginPage',
+  name: 'DashboardPage',
   data: () => {
     return {
       error: {
@@ -49,11 +37,7 @@ export default {
       }
 
       fetch.post('api/v1/users/authenticate', this.auth)
-      .then((res) => {
-        localStorage.setItem('tokenUser', res.data.data.token);
-        localStorage.setItem('userData', JSON.stringify(res.data.data.user));
-        window.location = '/dashboard';
-      })
+      .then((res) => console.log(res))
       .catch((err) => {
         if (err) {
           this.error.status = true;
