@@ -181,7 +181,7 @@ export default {
     }
   },
   mounted() {
-    fetch.get('api/v1/trading-analyst')
+    fetch.get('/api/v1/trading-analyst')
       .then((res) => {
         this.tradingAnalysts = res.data.data;
       }).catch((err) => {

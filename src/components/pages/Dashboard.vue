@@ -36,7 +36,7 @@ export default {
         return;
       }
 
-      fetch.post('api/v1/users/authenticate', this.auth)
+      fetch.post('/api/v1/users/authenticate', this.auth)
       .then((res) => console.log(res))
       .catch((err) => {
         if (err) {

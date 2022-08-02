@@ -48,7 +48,7 @@ export default {
         return;
       }
 
-      fetch.post('api/v1/users/authenticate', this.auth)
+      fetch.post('/api/v1/users/authenticate', this.auth)
       .then((res) => {
         localStorage.setItem('tokenUser', res.data.data.token);
         localStorage.setItem('userData', JSON.stringify(res.data.data.user));
