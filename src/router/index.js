@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import LoginPage from './../components/pages/Login.vue'
 import SettingsPage from './../components/pages/Settings.vue'
 import DashboardPage from './../components/pages/Dashboard.vue'
+import WeeklyReportPage from './../components/pages/WeeklyReport.vue'
 import AdministratorPage from './../components/pages/Administrator.vue'
 
 const routes = [
@@ -20,6 +21,14 @@ const routes = [
         name: 'settings',
         meta: {
             title: 'Burry Trading: Configurações',
+        }
+    },
+    {
+        path: '/weekly-report',
+        component: WeeklyReportPage,
+        name: 'weekly-report',
+        meta: {
+            title: 'Burry Trading: Relatório Semanal',
         }
     },
     {

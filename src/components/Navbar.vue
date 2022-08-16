@@ -14,7 +14,7 @@
               <router-link class="nav-link" to="/settings" exact>Configurações</router-link>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/weekly_report" exact>Relatório Semanal</router-link>
+                <router-link class="nav-link" to="/weekly-report" exact>Relatório Semanal</router-link>
             </li>
         </ul>
         <span class="navbar-text">
