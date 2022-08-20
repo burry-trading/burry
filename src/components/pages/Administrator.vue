@@ -22,18 +22,18 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="objective" class="form-label">Par</label>
-                <input type="text" class="form-control" id="pair" placeholder="BTCUSDT">
+                <input type="text" class="form-control" v-model="operation.pair" placeholder="BTCUSDT">
               </div>
               <div class="col-md-4">
                 <label for="analyst" class="form-label">Analista</label>
-                <select id="analyst" class="form-select" aria-label="analyst">
+                <select v-model="operation.tradingAnalyst" class="form-select" aria-label="analyst">
                   <option selected>Escolha um analista</option>
-                  <option v-for="trading in tradingAnalysts" :key="trading.id" :value="trading.id">{{ trading.name }}</option>
+                  <option v-for="trading in tradingAnalysts"  :key="trading.id" :value="trading.id">{{ trading.name }}</option>
                 </select>
               </div>
               <div class="col-md-3">
                 <label for="operation" class="form-label">Tipo da operação</label>
-                <select id="operation" class="form-select" aria-label="operation">
+                <select v-model="operation.operation" class="form-select" aria-label="operation">
                   <option selected>Escolha tipo da operação</option>
                   <option value="BUY">Compra</option>
                   <option value="SELL">Venda</option>
@@ -42,7 +42,7 @@
               <div class="col-md-2">
                 <label for="target" class="form-label">Objetivo</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" id="target" aria-describedby="basic-addon2">
+                  <input type="text" class="form-control" v-model="operation.target" aria-describedby="basic-addon2">
                   <span class="input-group-text" id="basic-addon2">%</span>
                 </div>
               </div>
@@ -51,15 +51,15 @@
             <div class="row">
               <div class="col-md-4">
                 <label for="price" class="form-label">Preço Atual</label>
-                <input type="text" class="form-control" id="price">
+                <input type="text" class="form-control" v-model="operation.price">
               </div>
               <div class="col-md-4">
                 <label for="stop_loss" class="form-label">Stop Loss</label>
-                <input type="text" class="form-control" id="stop_loss">
+                <input type="text" class="form-control" v-model="operation.stop_loss">
               </div>
               <div class="col-md-4">
                 <label for="price_entry" class="form-label">Preço entrada</label>
-                <input type="text" class="form-control" id="price_entry">
+                <input type="text" class="form-control" v-model="operation.price_entry">
               </div>
             </div>
             <br>
@@ -75,7 +75,7 @@
 
           <div class="tab-pane fade p-3" id="nav-telegram" role="tabpanel"
           aria-labelledby="nav-telegram-tab">
-            <div id="alertAnalyst" class="alert alert-info" role="alert">
+            <div v-if="tradingAnalyst.created" class="alert alert-info" role="alert">
               Analista foi criado com sucesso!
             </div>
             <div class="row">
@@ -104,7 +104,7 @@
                       <th scope="row">{{ trading.id }}</th>
                       <td>{{ trading.name }}</td>
                       <td>{{ trading.user_name }}</td>
-                      <td><button type="button" class="btn btn-dark">Editar</button></td>
+                      <td><button type="button" class="btn btn-dark" disabled>Editar</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -126,13 +126,13 @@
           <div class="row">
             <div class="col-md-12">
               <label for="objective" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="nameAnalyst">
+              <input type="text" class="form-control" v-model="tradingAnalyst.name">
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-          <button type="button" class="btn btn-primary" id="btnCreateAnalyst" data-bs-dismiss="modal">Criar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-on:click="addTradingAnalyst">Criar</button>
         </div>
       </div>
     </div>
@@ -151,13 +151,13 @@
             <h4 style="margin-bottom: 0;font-weight: 800;">Detalhes da operação:</h4>
             <hr style="margin-top: 2px;">
             <ul style="list-style-type: none">
-              <li><strong>Par:</strong> <span id="confirmPair"></span></li>
-              <li><strong>Analista:</strong> <span id="confirmAnalyst"></span></li>
-              <li><strong>Objetivo:</strong> <span id="confirmTarget"></span></li>
-              <li><strong>Operação:</strong> <span id="confirmOperation"></span></li>
-              <li><strong>Stop Loss:</strong> <span id="confirmStopLoss"></span></li>
-              <li><strong>Preço Atual:</strong> <span id="confirmPrice"></span></li>
-              <li><strong>Preço Entrada:</strong> <span id="confirmEntry"></span></li>
+              <li><strong>Par:</strong> {{ operation.pair }}</li>
+              <li><strong>Analista:</strong> {{ tradingAnalysts[operation.tradingAnalyst-1]?.name }}</li>
+              <li><strong>Objetivo:</strong> {{ operation.target }}%</li>
+              <li><strong>Operação:</strong> {{ operation.operation }}</li>
+              <li><strong>Stop Loss:</strong> {{ operation.stop_loss }}</li>
+              <li><strong>Preço Atual:</strong> {{ operation.price }}</li>
+              <li><strong>Preço Entrada:</strong> {{ operation.price_entry }}</li>
             </ul>
           </div>
         </div>
@@ -177,18 +177,54 @@ export default {
   name: 'AdministratorPage',
   data() {
     return {
+      tradingAnalyst: {
+        name,
+        created: false,
+      },
       tradingAnalysts: [],
+      operation: {
+        pair: null,
+        tradingAnalyst: null,
+        operation: null,
+        target: null,
+        price: null,
+        stop_loss: null,
+        price_entry: null,
+      }
     }
   },
   mounted() {
-    fetch.get('/api/v1/trading-analyst')
+    this.loadTradingAnalysts();
+  },
+  methods: {
+    loadTradingAnalysts() {
+      fetch.get('/api/v1/trading-analyst')
       .then((res) => {
         this.tradingAnalysts = res.data.data;
       }).catch((err) => {
         console.log(err);
       });
-  },
-  methods: {}
+    },
+
+    addTradingAnalyst() {
+      const dataAnalyst = {
+        name: this.tradingAnalyst.name,
+        user_id: JSON.parse(localStorage.getItem('userData')).id,
+        registered_by_user_id: JSON.parse(localStorage.getItem('userData')).id,
+      }
+
+      fetch.post('/api/v1/trading-analyst', dataAnalyst)
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          this.tradingAnalyst.created = true;
+        }
+        
+        this.loadTradingAnalysts();
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 }
 </script>
 
