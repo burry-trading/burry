@@ -25,12 +25,12 @@
             <form>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Secret</label>
-                <input type="text" value="aaaaa" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="text" v-model="binanceSettings.key" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                 <div id="emailHelp" class="form-text">Adicione sua secret key para <strong>bot</strong> conseguir acessar sua conta e realizar as operações</div>
               </div>
               <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Key</label>
-                <input type="text" value="bbbbbbbb" class="form-control" id="exampleInputPassword1" aria-describedby="passwordHelp">
+                <input type="text" v-model="binanceSettings.secret" class="form-control" id="exampleInputPassword1" aria-describedby="passwordHelp">
                 <div id="passwordHelp" class="form-text">Adicione sua key para <strong>bot</strong> conseguir acessar sua conta e realizar as operações</div>
               </div>
               <button type="submit" class="btn btn-primary">Salvar</button>
@@ -65,32 +65,34 @@ export default {
   name: 'SettingsPage',
   data: () => {
     return {
-      error: {
-        status: false,
-        message: '',
-      },
-      auth: {
-        email: undefined,
-        password: undefined
+      binanceSettings: {
+        key: undefined,
+        secret: undefined
       }
     }
   },
+  mounted() {
+    this.getSettings();
+  },
   methods: {
-    authenticate() {
-      if (!this.auth.email || !this.auth.password ) {
-        this.error.status = true;
-        this.error.message = 'Hey!! Você precisa preencher os dados antes de tentar fazer login.'
-        return;
-      }
+    getSettings() {
+      const { id } = JSON.parse(localStorage.getItem('userData'));
 
-      fetch.post('/api/v1/users/authenticate', this.auth)
-      .then((res) => console.log(res))
+      fetch.get(`/api/v1//users/${id}/binance`)
+      .then((res) => {
+          if (res.data.statusCode === 200 && res.data.message === 'User Binance found') {
+            this.binanceSettings.key = this.generateHash();
+            this.binanceSettings.secret = this.generateHash();
+          }
+      })
       .catch((err) => {
-        if (err) {
-          this.error.status = true;
-          this.error.message = 'Oops! Parece que as credenciais informadas são inválidas, tente novamente.'
-        }
+        console.log(err);
       });
+    },
+    generateHash() {
+      const res = (len, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') => [...Array(len)].map(() => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+
+      return res(64);
     }
   }
 }

@@ -24,45 +24,66 @@
                 <label for="objective" class="form-label">Par</label>
                 <input type="text" class="form-control" v-model="operation.pair" placeholder="BTCUSDT">
               </div>
-              <div class="col-md-4">
-                <label for="analyst" class="form-label">Analista</label>
-                <select v-model="operation.tradingAnalyst" class="form-select" aria-label="analyst">
+              <div class="col-md-3">
+                <label for="trading_analyst_id" class="form-label">Analista</label>
+                <select v-model="operation.trading_analyst_id" class="form-select" aria-label="analyst">
                   <option selected>Escolha um analista</option>
                   <option v-for="trading in tradingAnalysts"  :key="trading.id" :value="trading.id">{{ trading.name }}</option>
                 </select>
               </div>
-              <div class="col-md-3">
-                <label for="operation" class="form-label">Tipo da operação</label>
-                <select v-model="operation.operation" class="form-select" aria-label="operation">
+              <div class="col-md-2">
+                <label for="type" class="form-label">Tipo da operação</label>
+                <select v-model="operation.type" class="form-select" aria-label="type">
                   <option selected>Escolha tipo da operação</option>
                   <option value="BUY">Compra</option>
                   <option value="SELL">Venda</option>
                 </select>
               </div>
               <div class="col-md-2">
-                <label for="target" class="form-label">Objetivo</label>
+                <label for="target_price" class="form-label">Objetivo</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" v-model="operation.target" aria-describedby="basic-addon2">
-                  <span class="input-group-text" id="basic-addon2">%</span>
+                  <input type="text" class="form-control" v-model="operation.target_price" aria-describedby="basic-addon2">
                 </div>
+              </div>
+              <div class="col-md-2">
+                <label for="price" class="form-label">Objetivo PNL</label>
+                <input type="text" class="form-control" v-model="operation.target_price_pnl_percentage">
               </div>
             </div>
             <br>
             <div class="row">
               <div class="col-md-4">
-                <label for="price" class="form-label">Preço Atual</label>
-                <input type="text" class="form-control" v-model="operation.price">
+                <label for="stop_price" class="form-label">Stop Price</label>
+                <input type="text" class="form-control" v-model="operation.stop_price">
+              </div>
+              <div class="col-md-2">
+                <label for="stop_price_pnl_percentage" class="form-label">Stop Price PNL</label>
+                <input type="text" class="form-control" v-model="operation.stop_price_pnl_percentage">
               </div>
               <div class="col-md-4">
-                <label for="stop_loss" class="form-label">Stop Loss</label>
-                <input type="text" class="form-control" v-model="operation.stop_loss">
+                <label for="entry_price" class="form-label">Preço entrada</label>
+                <input type="text" class="form-control" v-model="operation.entry_price">
               </div>
-              <div class="col-md-4">
-                <label for="price_entry" class="form-label">Preço entrada</label>
-                <input type="text" class="form-control" v-model="operation.price_entry">
+              <div class="col-md-2">
+                <label for="entry_price_pnl_percentage" class="form-label">Preço entrada PNL</label>
+                <input type="text" class="form-control" v-model="operation.entry_price_pnl_percentage">
               </div>
             </div>
             <br>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="current_stop_price" class="form-label">Current Stop Price</label>
+                <input type="text" class="form-control" v-model="operation.current_stop_price">
+              </div>
+              <div class="col-md-4">
+                <label for="current_stop_price_pnl_percentage" class="form-label">Current Stop Price PNL</label>
+                <input type="text" class="form-control" v-model="operation.current_stop_price_pnl_percentage">
+              </div>
+              <div class="col-md-6">
+                <label for="capital_allocation_percentage" class="form-label">Capital Allocation</label>
+                <input type="text" class="form-control" v-model="operation.capital_allocation_percentage">
+              </div>
+            </div>
             <br>
             <div class="row">
               <div class="col-md-12">
@@ -152,18 +173,23 @@
             <hr style="margin-top: 2px;">
             <ul style="list-style-type: none">
               <li><strong>Par:</strong> {{ operation.pair }}</li>
-              <li><strong>Analista:</strong> {{ tradingAnalysts[operation.tradingAnalyst-1]?.name }}</li>
-              <li><strong>Objetivo:</strong> {{ operation.target }}%</li>
-              <li><strong>Operação:</strong> {{ operation.operation }}</li>
-              <li><strong>Stop Loss:</strong> {{ operation.stop_loss }}</li>
-              <li><strong>Preço Atual:</strong> {{ operation.price }}</li>
-              <li><strong>Preço Entrada:</strong> {{ operation.price_entry }}</li>
+              <li><strong>Analista:</strong> {{ tradingAnalysts[operation.trading_analyst_id-1]?.name }}</li>
+              <li><strong>Operação:</strong> {{ operation.type }}</li>
+              <li><strong>Objetivo:</strong> {{ operation.target_price }}%</li>
+              <li><strong>Objetivo PNL (%):</strong> {{ operation.target_price_pnl_percentage }}%</li>
+              <li><strong>Stop Price:</strong> {{ operation.stop_price }}</li>
+              <li><strong>Stop Price PNL (%):</strong> {{ operation.stop_price_pnl_percentage }}%</li>
+              <li><strong>Preço Entrada:</strong> {{ operation.entry_price }}</li>
+              <li><strong>Preço Entrada PNL (%):</strong> {{ operation.entry_price_pnl_percentage }}%</li>
+              <li><strong>Stop Price Atual:</strong> {{ operation.current_stop_price }}</li>
+              <li><strong>Stop Price Atual PNL (%):</strong> {{ operation.current_stop_price_pnl_percentage }}%</li>
+              <li><strong>Capital de alocação (%):</strong> {{ operation.capital_allocation_percentage }}%</li>
             </ul>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="btnCreateOperation" data-bs-dismiss="modal">Sim, enviar operação</button>
+          <button type="button" class="btn btn-primary" v-on:click="createOperation" data-bs-dismiss="modal">Sim, enviar operação</button>
         </div>
       </div>
     </div>
@@ -183,13 +209,19 @@ export default {
       },
       tradingAnalysts: [],
       operation: {
+        user_id: null,
         pair: null,
-        tradingAnalyst: null,
+        trading_analyst_id: null,
         operation: null,
-        target: null,
-        price: null,
-        stop_loss: null,
-        price_entry: null,
+        target_price: null,
+        target_price_pnl_percentage: null,
+        stop_price: null,
+        stop_price_pnl_percentage: null,
+        entry_price: null,
+        entry_price_pnl_percentage: null,
+        current_stop_price: null,
+        current_stop_price_pnl_percentage: null,
+        capital_allocation_percentage: null,
       }
     }
   },
@@ -223,6 +255,13 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+
+    createOperation() {
+      const { id } = JSON.parse(localStorage.getItem('userData'));
+      this.operation.user_id = id;
+
+      console.log(this.operation);
     }
   }
 }
