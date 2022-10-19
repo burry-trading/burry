@@ -52,7 +52,7 @@ export default {
       .then((res) => {
         localStorage.setItem('tokenUser', res.data.data.token);
         localStorage.setItem('userData', JSON.stringify(res.data.data.user));
-        window.location = '/dashboard';
+        setTimeout(() => this.$router.push({ path: '/dashboard' }), 2000);
       })
       .catch((err) => {
         if (err) {

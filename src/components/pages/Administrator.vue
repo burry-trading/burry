@@ -42,7 +42,7 @@
               <div class="col-md-2">
                 <label for="target_price" class="form-label">Objetivo</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" v-model="operation.target_price" aria-describedby="basic-addon2">
+                  <money3 class="form-control" v-model.number="operation.target_price" v-bind="money"></money3>
                 </div>
               </div>
               <div class="col-md-2">
@@ -54,7 +54,7 @@
             <div class="row">
               <div class="col-md-4">
                 <label for="stop_price" class="form-label">Stop Price</label>
-                <input type="text" class="form-control" v-model="operation.stop_price">
+                <money3 class="form-control" v-model.number="operation.stop_price" v-bind="money"></money3>
               </div>
               <div class="col-md-2">
                 <label for="stop_price_pnl_percentage" class="form-label">Stop Price PNL</label>
@@ -62,7 +62,7 @@
               </div>
               <div class="col-md-4">
                 <label for="entry_price" class="form-label">Preço entrada</label>
-                <input type="text" class="form-control" v-model="operation.entry_price">
+                <money3 class="form-control" v-model.number="operation.entry_price" v-bind="money"></money3>
               </div>
               <div class="col-md-2">
                 <label for="entry_price_pnl_percentage" class="form-label">Preço entrada PNL</label>
@@ -73,7 +73,7 @@
             <div class="row">
               <div class="col-md-2">
                 <label for="current_stop_price" class="form-label">Current Stop Price</label>
-                <input type="text" class="form-control" v-model="operation.current_stop_price">
+                <money3 class="form-control" v-model.number="operation.current_stop_price" v-bind="money"></money3>
               </div>
               <div class="col-md-4">
                 <label for="current_stop_price_pnl_percentage" class="form-label">Current Stop Price PNL</label>
@@ -198,11 +198,21 @@
 
 <script>
 import fetch from './../../services/burry.service';
+import { Money3Component } from 'v-money3'
 
 export default {
   name: 'AdministratorPage',
+  components: { money3: Money3Component },
   data() {
     return {
+      money: {
+        decimal: '.',
+        thousands: '',
+        prefix: '',
+        suffix: '',
+        precision: 16,
+        masked: false
+      },
       tradingAnalyst: {
         name,
         created: false,

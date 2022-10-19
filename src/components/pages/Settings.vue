@@ -78,7 +78,7 @@ export default {
     getSettings() {
       const { id } = JSON.parse(localStorage.getItem('userData'));
 
-      fetch.get(`/api/v1//users/${id}/binance`)
+      fetch.get(`/api/v1/users/${id}/binance`)
       .then((res) => {
           if (res.data.statusCode === 200 && res.data.message === 'User Binance found') {
             this.binanceSettings.key = this.generateHash();
