@@ -9,8 +9,8 @@ instance.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   if (error.response.status === 401) {
-    localStorage.removeItem('userData');
-    localStorage.removeItem('tokenUser');
+    // localStorage.removeItem('userData');
+    // localStorage.removeItem('tokenUser');
     window.location = '/';
   }
 
