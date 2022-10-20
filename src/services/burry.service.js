@@ -11,7 +11,7 @@ instance.interceptors.response.use(function (response) {
   if (error.response.status === 401) {
     // localStorage.removeItem('userData');
     // localStorage.removeItem('tokenUser');
-    window.location = '/';
+    // window.location = '/';
   }
 
   return Promise.reject(error);
