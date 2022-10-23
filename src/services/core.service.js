@@ -12,8 +12,6 @@ instance.interceptors.response.use(function (response) {
     // localStorage.removeItem('tokenUser');
     // window.location = '/';
   }
-
-  return Promise.reject(error);
 });
 
 export default instance;

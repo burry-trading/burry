@@ -23,7 +23,7 @@
               <div class="col-md-3">
                 <label for="objective" class="form-label">Par</label>
                 <select v-model="operation.pair" class="form-select" aria-label="type">
-                  <option selected>Escolha um par</option>
+                  <option selected value="0">Escolha um par</option>
                   <option v-for="(pair, index) in pairs" :key="index" :value="pair">{{ pair }}</option>
                 </select>
               </div>
@@ -214,7 +214,7 @@ export default {
         thousands: '',
         prefix: '',
         suffix: '',
-        precision: 16,
+        precision: 8,
         masked: false
       },
       tradingAnalyst: {
@@ -227,17 +227,59 @@ export default {
         user_id: null,
         pair: null,
         trading_analyst_id: null,
-        target_price: null,
+        target_price: 0,
         target_price_pnl_percentage: null,
-        stop_price: null,
+        stop_price: 0,
         stop_price_pnl_percentage: null,
-        entry_price: null,
-        entry_price_pnl_percentage: null,
-        current_stop_price: null,
+        entry_price: 0,
+        entry_price_pnl_percentage: 0,
+        current_stop_price: 0,
         current_stop_price_pnl_percentage: null,
         capital_allocation_percentage: null,
       }
     }
+  },
+  watch: {
+    'operation.pair': {
+      deep: true,
+      handler: function(newValue, oldValue) {
+        if(oldValue != newValue) {
+          if (newValue == "0") return;
+
+          return this.getPricePair(newValue);
+        }
+      }
+    },
+    'operation.target_price_pnl_percentage': {
+      deep: true,
+      handler: function(newValue, oldValue) {
+        if(oldValue != newValue) {
+          if (newValue == "0") return;
+
+          return this.operation.target_price = ((newValue * this.operation.entry_price) / 100) + this.operation.entry_price;
+        }
+      }
+    },
+    'operation.current_stop_price_pnl_percentage': {
+      deep: true,
+      handler: function(newValue, oldValue) {
+        if(oldValue != newValue) {
+          if (newValue == "0") return;
+
+          return this.operation.current_stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
+        }
+      }
+    },
+    'operation.stop_price_pnl_percentage': {
+      deep: true,
+      handler: function(newValue, oldValue) {
+        if(oldValue != newValue) {
+          if (newValue == "0") return;
+
+          return this.operation.stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
+        }
+      }
+    },
   },
   mounted() {
     this.loadTradingAnalysts();
@@ -256,8 +298,16 @@ export default {
     loadPairs() {
       fetchCoreAPI.get('/availableUSDTPairs')
       .then((res) => {
-        console.log(res);
-        this.pairs = res.data.result;
+        this.pairs = res.data.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    getPricePair(symbol) {
+      fetchCoreAPI.get(`/lastPrice?market=${symbol}`)
+      .then((res) => {
+        this.operation.entry_price = Number(res.data.data.price);
       }).catch((err) => {
         console.log(err);
       });
