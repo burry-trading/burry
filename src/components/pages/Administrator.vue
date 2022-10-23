@@ -22,7 +22,10 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="objective" class="form-label">Par</label>
-                <input type="text" class="form-control" v-model="operation.pair" placeholder="BTCUSDT">
+                <select v-model="operation.pair" class="form-select" aria-label="type">
+                  <option selected>Escolha um par</option>
+                  <option v-for="(pair, index) in pairs" :key="index" :value="pair">{{ pair }}</option>
+                </select>
               </div>
               <div class="col-md-3">
                 <label for="trading_analyst_id" class="form-label">Analista</label>
@@ -197,7 +200,8 @@
 </template>
 
 <script>
-import fetch from './../../services/burry.service';
+import fetchInternalAPI from './../../services/burry.service';
+import fetchCoreAPI from './../../services/core.service';
 import { Money3Component } from 'v-money3'
 
 export default {
@@ -217,12 +221,12 @@ export default {
         name,
         created: false,
       },
+      pairs: [],
       tradingAnalysts: [],
       operation: {
         user_id: null,
         pair: null,
         trading_analyst_id: null,
-        operation: null,
         target_price: null,
         target_price_pnl_percentage: null,
         stop_price: null,
@@ -237,12 +241,23 @@ export default {
   },
   mounted() {
     this.loadTradingAnalysts();
+    this.loadPairs();
   },
   methods: {
     loadTradingAnalysts() {
-      fetch.get('/api/v1/trading-analyst')
+      fetchInternalAPI.get('/api/v1/trading-analyst')
       .then((res) => {
         this.tradingAnalysts = res.data.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    loadPairs() {
+      fetchCoreAPI.get('/availableUSDTPairs')
+      .then((res) => {
+        console.log(res);
+        this.pairs = res.data.result;
       }).catch((err) => {
         console.log(err);
       });
@@ -255,7 +270,7 @@ export default {
         registered_by_user_id: JSON.parse(localStorage.getItem('userData')).id,
       }
 
-      fetch.post('/api/v1/trading-analyst', dataAnalyst)
+      fetchInternalAPI.post('/api/v1/trading-analyst', dataAnalyst)
       .then((res) => {
         if (res.data.statusCode === 200) {
           this.tradingAnalyst.created = true;
