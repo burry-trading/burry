@@ -76,11 +76,11 @@
             <div class="row">
               <div class="col-md-2">
                 <label for="current_stop_price" class="form-label">Current Stop Price</label>
-                <money3 class="form-control" v-model.number="operation.current_stop_price" v-bind="money"></money3>
+                <money3 class="form-control" v-model.number="operation.current_stop_price" v-bind="money" disabled></money3>
               </div>
               <div class="col-md-4">
                 <label for="current_stop_price_pnl_percentage" class="form-label">Current Stop Price PNL</label>
-                <input type="text" class="form-control" v-model="operation.current_stop_price_pnl_percentage">
+                <input type="text" class="form-control" v-model="operation.current_stop_price_pnl_percentage" disabled>
               </div>
               <div class="col-md-6">
                 <label for="capital_allocation_percentage" class="form-label">Capital Allocation</label>
@@ -260,22 +260,14 @@ export default {
         }
       }
     },
-    'operation.current_stop_price_pnl_percentage': {
-      deep: true,
-      handler: function(newValue, oldValue) {
-        if(oldValue != newValue) {
-          if (newValue == "0") return;
-
-          return this.operation.current_stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
-        }
-      }
-    },
     'operation.stop_price_pnl_percentage': {
       deep: true,
       handler: function(newValue, oldValue) {
         if(oldValue != newValue) {
           if (newValue == "0") return;
 
+          this.operation.current_stop_price_pnl_percentage = newValue;
+          this.operation.current_stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
           return this.operation.stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
         }
       }
