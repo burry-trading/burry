@@ -1,23 +1,27 @@
 <template>
-  <div class="container">
-    <div class="row" v-if="error.status">
+  <div class="container-fluid">
+    <!-- <div class="row" v-if="error.status">
       <div class="col-sm-12">
         <div class="alert alert-danger" role="alert">
           {{ error.message }}
         </div>
       </div>
-    </div>
+    </div> --> 
     <div class="row">
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label for="inputEmail" class="form-label">Email</label>
-          <input type="email" class="form-control" v-model="auth.email">
+      <div class="col-sm-6 login-image"></div>
+      <div class="col-sm-6 login-form">
+        <div class="login-form-components">
+          <h1 style="font-weight: 900;">Burry Trading</h1>
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" v-model="auth.email">
+          </div>
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Senha</label>
+            <input type="password" class="form-control" v-model="auth.password">
+          </div>
+          <button id="btnLogin" class="button-login" v-on:click="authenticate">Acessar</button>
         </div>
-        <div class="mb-3">
-          <label for="inputPassword" class="form-label">Senha</label>
-          <input type="password" class="form-control" v-model="auth.password">
-        </div>
-        <button id="btnLogin" class="btn btn-primary" v-on:click="authenticate">Enviar</button>
       </div>
     </div>
   </div>
@@ -66,9 +70,30 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  .login-image {
+    background-image: url('https://images-development-papermoney.sfo3.digitaloceanspaces.com/pexels-david-mcbee-730564.jpg');
+    background-size: cover;
+    height: 100vh;
+    filter: brightness(50%);
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-form-components {
+    width: 80%;
+  }
+
+  .button-login {
+    padding: 5px 20px 5px 20px;
+    border-radius: 32px;
+    border: 0px;
+    background-color: #2EC4B6;
+    color: #0C4944;
+    font-weight: bold;
+  }
 </style>
