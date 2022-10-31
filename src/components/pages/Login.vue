@@ -1,17 +1,15 @@
 <template>
   <div class="container-fluid">
-    <!-- <div class="row" v-if="error.status">
-      <div class="col-sm-12">
-        <div class="alert alert-danger" role="alert">
-          {{ error.message }}
-        </div>
-      </div>
-    </div> --> 
     <div class="row">
-      <div class="col-sm-6 login-image"></div>
+      <div class="col-sm-6 login-image d-none d-sm-block"></div>
       <div class="col-sm-6 login-form">
         <div class="login-form-components">
           <h1 style="font-weight: 900;">Burry Trading</h1>
+          <div class="mb-3" v-if="error.status">
+            <div class="alert alert-danger" role="alert">
+              {{ error.message }}
+            </div>
+          </div>
           <div class="mb-3">
             <label for="inputEmail" class="form-label">Email</label>
             <input type="email" class="form-control" v-model="auth.email">
@@ -82,6 +80,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
   }
 
   .login-form-components {
