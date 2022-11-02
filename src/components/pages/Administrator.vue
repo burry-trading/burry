@@ -18,81 +18,40 @@
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active p-3" id="nav-home" role="tabpanel"
           aria-labelledby="nav-home-tab">
-            <h2>Operações</h2>
             <div class="row">
-              <div class="col-md-3">
-                <label for="objective" class="form-label">Par</label>
-                <select v-model="operation.pair" class="form-select" aria-label="type">
-                  <option selected value="0">Escolha um par</option>
-                  <option v-for="(pair, index) in pairs" :key="index" :value="pair">{{ pair }}</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="trading_analyst_id" class="form-label">Analista</label>
-                <select v-model="operation.trading_analyst_id" class="form-select" aria-label="analyst">
-                  <option selected>Escolha um analista</option>
-                  <option v-for="trading in tradingAnalysts"  :key="trading.id" :value="trading.id">{{ trading.name }}</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <label for="type" class="form-label">Tipo da operação</label>
-                <select v-model="operation.type" class="form-select" aria-label="type">
-                  <option selected>Escolha tipo da operação</option>
-                  <option value="BUY">Compra</option>
-                  <option value="SELL">Venda</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <label for="target_price" class="form-label">Objetivo</label>
-                <div class="input-group mb-3">
-                  <money3 class="form-control" v-model.number="operation.target_price" v-bind="money"></money3>
+              <div class="col-sm-12">
+                <div style="display: flex; justify-content: space-between">
+                  <h2>Operações</h2>
+                  <OffCanvas :pairs="pairs" :tradingAnalysts="tradingAnalysts"/>
                 </div>
               </div>
-              <div class="col-md-2">
-                <label for="price" class="form-label">Objetivo PNL</label>
-                <input type="text" class="form-control" v-model="operation.target_price_pnl_percentage">
-              </div>
             </div>
-            <br>
-            <div class="row">
-              <div class="col-md-4">
-                <label for="stop_price" class="form-label">Stop Price</label>
-                <money3 class="form-control" v-model.number="operation.stop_price" v-bind="money"></money3>
-              </div>
-              <div class="col-md-2">
-                <label for="stop_price_pnl_percentage" class="form-label">Stop Price PNL</label>
-                <input type="text" class="form-control" v-model="operation.stop_price_pnl_percentage">
-              </div>
-              <div class="col-md-4">
-                <label for="entry_price" class="form-label">Preço entrada</label>
-                <money3 class="form-control" v-model.number="operation.entry_price" v-bind="money"></money3>
-              </div>
-              <div class="col-md-2">
-                <label for="entry_price_pnl_percentage" class="form-label">Preço entrada PNL</label>
-                <input type="text" class="form-control" v-model="operation.entry_price_pnl_percentage">
-              </div>
-            </div>
-            <br>
-            <div class="row">
-              <div class="col-md-2">
-                <label for="current_stop_price" class="form-label">Current Stop Price</label>
-                <money3 class="form-control" v-model.number="operation.current_stop_price" v-bind="money" disabled></money3>
-              </div>
-              <div class="col-md-4">
-                <label for="current_stop_price_pnl_percentage" class="form-label">Current Stop Price PNL</label>
-                <input type="text" class="form-control" v-model="operation.current_stop_price_pnl_percentage" disabled>
-              </div>
-              <div class="col-md-6">
-                <label for="capital_allocation_percentage" class="form-label">Capital Allocation</label>
-                <input type="text" class="form-control" v-model="operation.capital_allocation_percentage">
-              </div>
-            </div>
-            <br>
             <div class="row">
               <div class="col-md-12">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalOperations" id="sendOperation">
-                  Enviar operação
-                </button>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Par</th>
+                      <th scope="col">Preço de entrada</th>
+                      <th scope="col">Tipo da operação</th>
+                      <th scope="col">Objetivo</th>
+                      <th scope="col">Preço Stop</th>
+                      <th scope="col">Criado em</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="operation in operations" :key="operation.id">
+                      <th scope="row">{{ operation.id }}</th>
+                      <td>{{ operation.pair }}</td>
+                      <td>{{ operation.entry_price }}</td>
+                      <td>{{ operation.type == 'BUY' ? 'Compra' : 'Venda' }}</td>
+                      <td>{{ operation.target_price }}</td>
+                      <td>{{ operation.current_stop_price }}</td>
+                      <td>{{ new Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(operation.created_at)) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -161,121 +120,33 @@
       </div>
     </div>
   </div>
-
-  <div class="modal fade" id="modalOperations" tabindex="-1" aria-labelledby="modalOperations" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalOperations">Confirmar operação</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Você tem certeza que deseja enviar essa operação?</p>
-          <div>
-            <h4 style="margin-bottom: 0;font-weight: 800;">Detalhes da operação:</h4>
-            <hr style="margin-top: 2px;">
-            <ul style="list-style-type: none">
-              <li><strong>Par:</strong> {{ operation.pair }}</li>
-              <li><strong>Analista:</strong> {{ tradingAnalysts[operation.trading_analyst_id-1]?.name }}</li>
-              <li><strong>Operação:</strong> {{ operation.type }}</li>
-              <li><strong>Objetivo:</strong> {{ operation.target_price }}%</li>
-              <li><strong>Objetivo PNL (%):</strong> {{ operation.target_price_pnl_percentage }}%</li>
-              <li><strong>Stop Price:</strong> {{ operation.stop_price }}</li>
-              <li><strong>Stop Price PNL (%):</strong> {{ operation.stop_price_pnl_percentage }}%</li>
-              <li><strong>Preço Entrada:</strong> {{ operation.entry_price }}</li>
-              <li><strong>Preço Entrada PNL (%):</strong> {{ operation.entry_price_pnl_percentage }}%</li>
-              <li><strong>Stop Price Atual:</strong> {{ operation.current_stop_price }}</li>
-              <li><strong>Stop Price Atual PNL (%):</strong> {{ operation.current_stop_price_pnl_percentage }}%</li>
-              <li><strong>Capital de alocação (%):</strong> {{ operation.capital_allocation_percentage }}%</li>
-            </ul>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" v-on:click="createOperation" data-bs-dismiss="modal">Sim, enviar operação</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import fetchInternalAPI from './../../services/burry.service';
 import fetchCoreAPI from './../../services/core.service';
-import { Money3Component } from 'v-money3'
+
+// Components
+import OffCanvas from './../OffCanvas';
 
 export default {
   name: 'AdministratorPage',
-  components: { money3: Money3Component },
+  components: { OffCanvas },
   data() {
     return {
-      money: {
-        decimal: '.',
-        thousands: '',
-        prefix: '',
-        suffix: '',
-        precision: 8,
-        masked: false
-      },
       tradingAnalyst: {
         name,
         created: false,
       },
+      operations: [],
       pairs: [],
-      tradingAnalysts: [],
-      operation: {
-        user_id: null,
-        pair: null,
-        trading_analyst_id: null,
-        target_price: 0,
-        target_price_pnl_percentage: null,
-        stop_price: 0,
-        stop_price_pnl_percentage: null,
-        entry_price: 0,
-        entry_price_pnl_percentage: 0,
-        current_stop_price: 0,
-        current_stop_price_pnl_percentage: null,
-        capital_allocation_percentage: null,
-      }
+      tradingAnalysts: []
     }
-  },
-  watch: {
-    'operation.pair': {
-      deep: true,
-      handler: function(newValue, oldValue) {
-        if(oldValue != newValue) {
-          if (newValue == "0") return;
-
-          return this.getPricePair(newValue);
-        }
-      }
-    },
-    'operation.target_price_pnl_percentage': {
-      deep: true,
-      handler: function(newValue, oldValue) {
-        if(oldValue != newValue) {
-          if (newValue == "0") return;
-
-          return this.operation.target_price = ((newValue * this.operation.entry_price) / 100) + this.operation.entry_price;
-        }
-      }
-    },
-    'operation.stop_price_pnl_percentage': {
-      deep: true,
-      handler: function(newValue, oldValue) {
-        if(oldValue != newValue) {
-          if (newValue == "0") return;
-
-          this.operation.current_stop_price_pnl_percentage = newValue;
-          this.operation.current_stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
-          return this.operation.stop_price = this.operation.entry_price - ((newValue * this.operation.entry_price) / 100);
-        }
-      }
-    },
   },
   mounted() {
     this.loadTradingAnalysts();
     this.loadPairs();
+    this.loadOperations();
   },
   methods: {
     loadTradingAnalysts() {
@@ -287,19 +158,20 @@ export default {
       });
     },
 
-    loadPairs() {
-      fetchCoreAPI.get('/availableUSDTPairs')
+    loadOperations() {
+      fetchInternalAPI.get('/api/v1/operations')
       .then((res) => {
-        this.pairs = res.data.data;
+        console.log(res.data.data);
+        this.operations = res.data.data;
       }).catch((err) => {
         console.log(err);
       });
     },
 
-    getPricePair(symbol) {
-      fetchCoreAPI.get(`/lastPrice?market=${symbol}`)
+    loadPairs() {
+      fetchCoreAPI.get('/availableUSDTPairs')
       .then((res) => {
-        this.operation.entry_price = Number(res.data.data.price);
+        this.pairs = res.data.data;
       }).catch((err) => {
         console.log(err);
       });
@@ -323,13 +195,6 @@ export default {
         console.log(err);
       });
     },
-
-    createOperation() {
-      const { id } = JSON.parse(localStorage.getItem('userData'));
-      this.operation.user_id = id;
-
-      console.log(this.operation);
-    }
   }
 }
 </script>
