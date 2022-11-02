@@ -1,5 +1,8 @@
 <template>
-      <div class="container">
+      <div class="container-fluid">
+        <div class="row" style="padding-top: 1%; padding-bottom: 1%;">
+        <h1 style="font-weight: 700">Painel de controle</h1>
+      </div>
         <div class="row">
       <div class="col-sm-12">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">

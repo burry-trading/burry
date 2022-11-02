@@ -1,5 +1,8 @@
 <template>
-      <div class="container">
+      <div class="container-fluid">
+        <div class="row" style="padding-top: 1%; padding-bottom: 1%;">
+        <h1 style="font-weight: 700">Dashboard</h1>
+      </div>
         <div class="row" v-if="!hasBinance">
           <div class="col-sm-12">
             <h1 class="text-center">Bem-vindo ao burry! 🎉</h1>
