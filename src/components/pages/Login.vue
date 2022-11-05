@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" style="width: 100vw;">
     <div class="row">
       <div class="col-sm-6 login-image d-none d-sm-block"></div>
       <div class="col-sm-6 login-form">
