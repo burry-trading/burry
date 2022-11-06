@@ -35,9 +35,9 @@ export default {
   },
   methods: {
     logout() {
-      // localStorage.removeItem('userData');
-      // localStorage.removeItem('tokenUser');
-      // window.location = '/';
+      localStorage.removeItem('userData');
+      localStorage.removeItem('tokenUser');
+      window.location = '/';
     }
   }
 }
