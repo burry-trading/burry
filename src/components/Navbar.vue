@@ -1,49 +1,37 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Burry Trading</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div v-if="user" class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/dashboard" exact>Dashboard</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/settings" exact>Configurações</router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" to="/weekly-report" exact>Relatório Semanal</router-link>
-            </li>
-        </ul>
-        <span class="navbar-text">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <router-link style="color:#0000008C" class="nav-link" to="/administrator" exact>Administração</router-link>
-                </li>
-                <li class="nav-item">
-                    <a style="color:#0000008C" class="nav-link " href="#" v-on:click="logout">Sair</a>
-                </li>
-            </ul>
-        </span>
-      </div>
+<div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;height: 100vh;">
+    <a href="/" class="d-block p-3 link-dark text-decoration-none" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
+      Burry
+    </a>
+    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+      <li class="nav-item">
+        <router-link class="nav-link py-3 border-bottom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" to="/dashboard" exact><font-awesome-icon icon="fa-solid fa-gauge" /></router-link>
+      </li>
+      <li>
+        <router-link class="nav-link py-3 border-bottom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" to="/weekly-report" exact><font-awesome-icon icon="fa-solid fa-box-archive" /></router-link>
+      </li>
+      <li>
+        <router-link class="nav-link py-3 border-bottom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" to="/administrator" exact><font-awesome-icon icon="fa-solid fa-superscript" /></router-link>
+      </li>
+    </ul>
+    <div class="dropdown border-top">
+      <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/waldrey.png" alt="mdo" width="24" height="24" class="rounded-circle">
+      </a>
+      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+        <li><a class="dropdown-item" href="/settings">Configurações</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Desconectar</a></li>
+      </ul>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'NavbarComponent',
   data() {
-    return {
-      user: undefined
-    }
-  },
-  mounted() {
-    if (localStorage.getItem('userData') && localStorage.getItem('tokenUser')) {
-      this.user = localStorage.getItem('userData');
-    }
+    return {}
   },
   methods: {
     logout() {
@@ -61,6 +49,12 @@ export default {
   }
 
   .route-active {
-    font-weight: 600;
+    background-color: #FFBF69 !important;
+    color: #FFF !important;
+  }
+
+  .nav-pills .nav-link {
+    border-radius: 0;
+    color: #FFBF69;
   }
 </style>

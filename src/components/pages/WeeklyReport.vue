@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
+      <div class="row" style="padding-top: 1%; padding-bottom: 1%">
+        <h1 style="font-weight: 700">Relatório mensal</h1>
+      </div>
         <div class="row">
           <div class="col-sm-12">
             <button style="margin-right: 8px;" class="btn btn-primary btn-sm">Janeiro</button>
