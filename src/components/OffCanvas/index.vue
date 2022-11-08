@@ -328,7 +328,7 @@ export default {
 		precisionNumbers(value) {
 			const valueSplitted = value.split('.');
 			
-			return valueSplitted[0] + valueSplitted[1].padEnd(8, "0");
+			return Number(valueSplitted[0] + '.' + valueSplitted[1].padEnd(8, "0"));
 		}
 	}
 };

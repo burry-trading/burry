@@ -24,7 +24,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Nunito Sans', Helvetica, Arial, sans-serif;
+  font-family: 'Satoshi', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
